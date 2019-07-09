@@ -11,6 +11,8 @@ djangorestframework = "*"
 python-decouple = "*"
 psycopg2 = "*"
 djangorestframework-jwt = "*"
+django-nose = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.7"
