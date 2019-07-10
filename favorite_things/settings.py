@@ -156,6 +156,9 @@ JWT_AUTH = {
 
     'JWT_RESPONSE_PAYLOAD_HANDLER':
     'favoriteapi.utils.jwt_response_payload_handler',
+
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_SECRET_KEY': config('SECRET_KEY')
 }
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'

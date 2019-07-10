@@ -1,10 +1,8 @@
 import json
 from rest_framework.test import APITestCase, APIClient
 from django.urls import reverse
-from django.test import TestCase
 from django.contrib.auth import get_user_model
 from rest_framework.views import status
-from .models import Category
 
 User = get_user_model()
 
@@ -19,7 +17,7 @@ class BaseViewTest(APITestCase):
         user.save()
 
 
-class AuthRegisterUserTest(BaseViewTest):
+class AuthUserAPITest(BaseViewTest):
     """
     Test for the auth/register/ endpoint
     """
@@ -103,25 +101,59 @@ class AuthRegisterUserTest(BaseViewTest):
         self.assertEqual(response.data['error'], "Invalid Credentials")
 
 
-# Test Models
-class CategoryModelTest(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        Category.objects.create(category='places')
+class CategoryAPITest(BaseViewTest):
+    def user_token(self):
+        url = reverse(
+            "auth-login",
+            kwargs={
+                "version": "v1"
+            }
+        )
+        data = {
+            "username": "paddy",
+            "password": "fakepassword"
+        }
+        response = self.client.post(
+            url,
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+        token = response.data.get("token", 0)
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
 
-    def create_category(self, category='games'):
-        return Category.objects.create(category=category)
+    def test_create_category_success(self):
+        self.user_token()
+        url = reverse(
+            "category-list",
+            kwargs={
+                "version": "v1"
+            }
+        )
+        data = {
+            "category": "gaMes"
+        }
+        response = self.client.post(
+            url,
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['category'], data['category'].lower())
 
-    def test_object_string_representation_is_valid(self):
-        category_obj = Category.objects.get(id=1)
-        expected_object_name = f'{category_obj.category}'
-        self.assertEqual(expected_object_name, str(category_obj))
-
-    def test_category_max_length(self):
-        category_name = Category.objects.get(id=1)
-        max_length = category_name._meta.get_field('category').max_length
-        self.assertEquals(max_length, 100)
-
-    def test_the_category_instance(self):
-        category = self.create_category()
-        self.assertTrue(isinstance(category, Category))
+    def test_create_category_without_token_fails(self):
+        url = reverse(
+            "category-list",
+            kwargs={
+                "version": "v1"
+            }
+        )
+        data = {
+            "category": "places"
+        }
+        response = self.client.post(
+            url,
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], "Authentication credentials were not provided.")
