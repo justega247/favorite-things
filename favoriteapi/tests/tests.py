@@ -1,7 +1,7 @@
 import json
-from rest_framework.test import APITestCase, APIClient
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from rest_framework.test import APITestCase, APIClient
 from rest_framework.views import status
 
 User = get_user_model()
@@ -15,6 +15,25 @@ class BaseViewTest(APITestCase):
         user = User.objects.create(username='paddy', email='paddy@mail.com')
         user.set_password('fakepassword')
         user.save()
+
+    def user_token(self):
+        url = reverse(
+            "auth-login",
+            kwargs={
+                "version": "v1"
+            }
+        )
+        data = {
+            "username": "paddy",
+            "password": "fakepassword"
+        }
+        response = self.client.post(
+            url,
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+        token = response.data.get("token", 0)
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
 
 
 class AuthUserAPITest(BaseViewTest):
@@ -102,25 +121,6 @@ class AuthUserAPITest(BaseViewTest):
 
 
 class CategoryAPITest(BaseViewTest):
-    def user_token(self):
-        url = reverse(
-            "auth-login",
-            kwargs={
-                "version": "v1"
-            }
-        )
-        data = {
-            "username": "paddy",
-            "password": "fakepassword"
-        }
-        response = self.client.post(
-            url,
-            data=json.dumps(data),
-            content_type="application/json"
-        )
-        token = response.data.get("token", 0)
-        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
-
     def test_create_category_success(self):
         self.user_token()
         url = reverse(
@@ -157,3 +157,82 @@ class CategoryAPITest(BaseViewTest):
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response.data['detail'], "Authentication credentials were not provided.")
+
+
+class FavoriteAPITest(BaseViewTest):
+    def test_create_favorite_thing_success(self):
+        self.user_token()
+        url = reverse(
+            "create-favorite",
+            kwargs={
+                "version": "v1"
+            }
+        )
+        data = {
+            "title": "nokia",
+            "description": "This is the first of its kind",
+            "ranking": 1,
+            "category": 1,
+            "metadata": {
+                "make": 2015,
+                "color": "black"
+            }
+        }
+        response = self.client.post(
+            url,
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIn("user", response.data)
+        self.assertIn("created_at", response.data)
+        self.assertEqual(response.data['user']['username'], 'paddy')
+
+    def test_create_favorite_thing_in_same_category_success(self):
+        self.user_token()
+        url = reverse(
+            "create-favorite",
+            kwargs={
+                "version": "v1"
+            }
+        )
+        data = {
+            "title": "motorola",
+            "description": "This is the next big thing",
+            "ranking": 1,
+            "category": 1,
+            "metadata": {
+                "make": 2019,
+                "color": "black"
+            }
+        }
+        response = self.client.post(
+            url,
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_favorite_thing_with_invalid_metadata_fails(self):
+        self.user_token()
+        url = reverse(
+            "create-favorite",
+            kwargs={
+                "version": "v1"
+            }
+        )
+        data = {
+            "title": "nokia",
+            "description": "This is the first of its kind",
+            "ranking": 1,
+            "category": 1,
+            "metadata": {
+                "price": 15500.50
+            }
+        }
+        response = self.client.post(
+            url,
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
