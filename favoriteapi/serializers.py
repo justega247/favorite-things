@@ -1,6 +1,8 @@
+import enum
+import datetime
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Category
+from .models import Category, Favorite
 
 User = get_user_model()
 
@@ -39,3 +41,23 @@ class CategorySerializer(serializers.ModelSerializer):
             validated_data[key] = value.lower()
         instance, _ = Category.objects.get_or_create(**validated_data)
         return instance
+
+
+class FavoriteThingSerializer(serializers.ModelSerializer):
+    user = UserDataSerializer(read_only=True)
+
+    class Meta:
+        model = Favorite
+        fields = '__all__'
+        read_only_fields = ['user']
+
+    def validate(self, data):
+        metadata = data.get('metadata', None)
+        valid_types = [str, int, datetime.date, enum.Enum]
+        if metadata:
+            for key, value in metadata.items():
+                if type(metadata[key]) not in valid_types:
+                    raise serializers.ValidationError(
+                        'The metadata fields can only contain text, numbers, dates and enumerables'
+                    )
+        return data

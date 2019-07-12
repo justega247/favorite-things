@@ -1,13 +1,13 @@
 from django.contrib.auth import get_user_model
-from rest_framework import status, generics
+from django.db.models import F
+from rest_framework import status, generics, viewsets, mixins
 from rest_framework.views import APIView
 from rest_framework_jwt.settings import api_settings
 from rest_framework.response import Response
-from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .serializers import UserDataSerializer, CategorySerializer
+from .serializers import UserDataSerializer, CategorySerializer, FavoriteThingSerializer
 from .permissions import AnonymousPermissionOnly
-from .models import Category
+from .models import Category, Favorite
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -51,3 +51,29 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (IsAuthenticated,)
+
+
+# Favorite things Related Views
+class FavoriteThingView(mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Favorite.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = FavoriteThingSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        ranking = data.get('ranking')
+        category_id = data.get('category')
+        existing_favorites = Favorite.objects.filter(
+            ranking__gte=ranking,
+            user=self.request.user
+        ).filter(
+            category__id=category_id
+        )
+        if existing_favorites:
+            existing_favorites.update(ranking=F('ranking') + 1)
+
+        return self.create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
