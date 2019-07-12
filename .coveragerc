@@ -1,0 +1,4 @@
+[report]
+omit =
+  favoriteapi/models.py,
+  favoriteapi/admin.py
