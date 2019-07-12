@@ -6,7 +6,7 @@ from rest_framework_jwt.settings import api_settings
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import UserDataSerializer, CategorySerializer, FavoriteThingSerializer
-from .permissions import AnonymousPermissionOnly
+from .permissions import AnonymousPermissionOnly, IsOwnerOrReadOnly
 from .models import Category, Favorite
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -77,3 +77,9 @@ class FavoriteThingView(mixins.CreateModelMixin, generics.GenericAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+
+class FavoriteThingDetailView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+    serializer_class = FavoriteThingSerializer
+    queryset = Favorite.objects.all()
+    lookup_field = 'id'

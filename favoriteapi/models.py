@@ -26,3 +26,7 @@ class Favorite(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def owner(self):
+        return self.user

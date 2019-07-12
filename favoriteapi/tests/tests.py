@@ -236,3 +236,55 @@ class FavoriteAPITest(BaseViewTest):
             content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_favorite_thing_with_existing_id_success(self):
+        self.user_token()
+        url = reverse(
+            "create-favorite",
+            kwargs={
+                "version": "v1"
+            }
+        )
+        data = {
+            "title": "tecno",
+            "description": "This is the first of its kind",
+            "ranking": 1,
+            "category": 1,
+        }
+        response = self.client.post(
+            url,
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+
+        favorite_id = response.data['id']
+        detail_url = reverse(
+            "detail-favorite",
+            kwargs={
+                "version": "v1",
+                "id": favorite_id
+            }
+        )
+        res = self.client.get(
+            detail_url,
+            content_type="application/json"
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data['title'], "tecno")
+
+    def test_get_favorite_thing_with_non_existing_id_fails(self):
+        self.user_token()
+        favorite_id = 1000
+        detail_url = reverse(
+            "detail-favorite",
+            kwargs={
+                "version": "v1",
+                "id": favorite_id
+            }
+        )
+        res = self.client.get(
+            detail_url,
+            content_type="application/json"
+        )
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(res.data['detail'], "Not found.")
