@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.db.models import F
+from django.db.models import F, Max
 from rest_framework import status, generics, viewsets, mixins
 from rest_framework.views import APIView
 from rest_framework_jwt.settings import api_settings
@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import UserDataSerializer, CategorySerializer, FavoriteThingSerializer
 from .permissions import AnonymousPermissionOnly, IsOwnerOrReadOnly
 from .models import Category, Favorite
+from .utils.error_message_handler import raise_error
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -73,13 +74,37 @@ class FavoriteThingView(mixins.CreateModelMixin, generics.GenericAPIView):
         ranking = data.get('ranking')
         category_id = data.get('category')
 
-        Favorite.objects.filter(
-            ranking__gte=ranking,
+        existing_favorites = Favorite.objects.filter(
             user=self.request.user,
             category__id=category_id
-        ).update(ranking=F('ranking') + 1)
+        )
+        if ranking != 1 and not existing_favorites:
+            raise_error(
+                message=f'The first valid ranking for a favorite in this category is 1'
+            )
+        if not existing_favorites:
+            return self.create(request, *args, **kwargs)
 
-        return self.create(request, *args, **kwargs)
+        current_max = Favorite.objects.filter(
+            user=self.request.user,
+            category__id=category_id
+        ).aggregate(Max('ranking'))
+
+        current_max_ranking = current_max['ranking__max']
+
+        if ranking <= current_max_ranking:
+            Favorite.objects.filter(
+                ranking__gte=ranking,
+                user=self.request.user,
+                category__id=category_id
+            ).update(ranking=F('ranking') + 1)
+            return self.create(request, *args, **kwargs)
+        elif ranking - current_max_ranking == 1:
+            return self.create(request, *args, **kwargs)
+        else:
+            raise_error(
+                message=f'The next valid ranking for a favorite in this category is {current_max_ranking + 1}'
+            )
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

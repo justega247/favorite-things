@@ -155,7 +155,7 @@ JWT_AUTH = {
     'JWT_AUTH_COOKIE': None,
 
     'JWT_RESPONSE_PAYLOAD_HANDLER':
-    'favoriteapi.utils.jwt_response_payload_handler',
+    'favoriteapi.utils.utils.jwt_response_payload_handler',
 
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
     'JWT_SECRET_KEY': config('SECRET_KEY')
