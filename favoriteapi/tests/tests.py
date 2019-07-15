@@ -182,6 +182,31 @@ class CategoryAPITest(BaseViewTest):
 
 
 class FavoriteAPITest(BaseViewTest):
+    def test_create_first_favorite_thing_in_category_with_invalid_ranking_fails(self):
+        self.user_token()
+        url = reverse(
+            "create-favorite",
+            kwargs={
+                "version": "v1"
+            }
+        )
+        data = {
+            "title": "nokia",
+            "description": "This is the first of its kind",
+            "ranking": 100,
+            "category": 1,
+            "metadata": {
+                "make": 2015,
+                "color": "black"
+            }
+        }
+        response = self.client.post(
+            url,
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_create_favorite_thing_success(self):
         self.user_token()
         url = reverse(
