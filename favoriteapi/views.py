@@ -27,6 +27,9 @@ class RegisterUsersView(generics.CreateAPIView):
 
 
 class LoginView(APIView):
+    """
+    POST auth/login/
+    """
     permission_classes = (AnonymousPermissionOnly,)
 
     def post(self, request, *args, **kwargs):
@@ -48,6 +51,9 @@ class LoginView(APIView):
 
 # Category Related Views
 class CategoryViewSet(viewsets.ModelViewSet):
+    """
+    POST category/
+    """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (IsAuthenticated,)
@@ -60,17 +66,18 @@ class FavoriteThingView(mixins.CreateModelMixin, generics.GenericAPIView):
     serializer_class = FavoriteThingSerializer
 
     def post(self, request, *args, **kwargs):
+        """
+        POST favorite/
+        """
         data = request.data
         ranking = data.get('ranking')
         category_id = data.get('category')
-        existing_favorites = Favorite.objects.filter(
+
+        Favorite.objects.filter(
             ranking__gte=ranking,
-            user=self.request.user
-        ).filter(
+            user=self.request.user,
             category__id=category_id
-        )
-        if existing_favorites:
-            existing_favorites.update(ranking=F('ranking') + 1)
+        ).update(ranking=F('ranking') + 1)
 
         return self.create(request, *args, **kwargs)
 
@@ -78,8 +85,19 @@ class FavoriteThingView(mixins.CreateModelMixin, generics.GenericAPIView):
         serializer.save(user=self.request.user)
 
 
-class FavoriteThingDetailView(generics.RetrieveAPIView):
+class FavoriteThingDetailView(mixins.DestroyModelMixin, generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
     serializer_class = FavoriteThingSerializer
     queryset = Favorite.objects.all()
     lookup_field = 'id'
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+    def perform_destroy(self, instance):
+        Favorite.objects.filter(
+            ranking__gt=instance.ranking,
+            category__id=instance.category_id
+        ).update(ranking=F('ranking') - 1)
+        return instance.delete()
+

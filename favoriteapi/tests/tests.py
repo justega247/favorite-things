@@ -15,6 +15,9 @@ class BaseViewTest(APITestCase):
         user = User.objects.create(username='paddy', email='paddy@mail.com')
         user.set_password('fakepassword')
         user.save()
+        user1 = User.objects.create(username='pascal', email='pascal@mail.com')
+        user1.set_password('fakepassword')
+        user1.save()
 
     def user_token(self):
         url = reverse(
@@ -32,8 +35,27 @@ class BaseViewTest(APITestCase):
             data=json.dumps(data),
             content_type="application/json"
         )
-        token = response.data.get("token", 0)
+        token = response.data.get("token", '')
         self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
+
+    def user1_token(self):
+        url = reverse(
+            "auth-login",
+            kwargs={
+                "version": "v1"
+            }
+        )
+        data = {
+            "username": "pascal",
+            "password": "fakepassword"
+        }
+        response = self.client.post(
+            url,
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+        token1 = response.data.get("token", '')
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token1)
 
 
 class AuthUserAPITest(BaseViewTest):
@@ -256,7 +278,6 @@ class FavoriteAPITest(BaseViewTest):
             data=json.dumps(data),
             content_type="application/json"
         )
-
         favorite_id = response.data['id']
         detail_url = reverse(
             "detail-favorite",
@@ -288,3 +309,71 @@ class FavoriteAPITest(BaseViewTest):
         )
         self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(res.data['detail'], "Not found.")
+
+    def test_delete_favorite_thing_success(self):
+        self.user_token()
+        url = reverse(
+            "create-favorite",
+            kwargs={
+                "version": "v1"
+            }
+        )
+        data = {
+            "title": "oppo",
+            "description": "This is the first",
+            "ranking": 1,
+            "category": 1,
+        }
+        response = self.client.post(
+            url,
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+        favorite_id = response.data['id']
+        detail_url = reverse(
+            "detail-favorite",
+            kwargs={
+                "version": "v1",
+                "id": favorite_id
+            }
+        )
+        res = self.client.delete(
+            detail_url,
+            content_type="application/json"
+        )
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_favorite_thing_for_a_different_user_fails(self):
+        self.user_token()
+        url = reverse(
+            "create-favorite",
+            kwargs={
+                "version": "v1"
+            }
+        )
+        data = {
+            "title": "tecno",
+            "description": "This is the first of its kind",
+            "ranking": 1,
+            "category": 1,
+        }
+        response = self.client.post(
+            url,
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+        favorite_id = response.data['id']
+
+        self.user1_token()
+        detail_url = reverse(
+            "detail-favorite",
+            kwargs={
+                "version": "v1",
+                "id": favorite_id
+            }
+        )
+        res = self.client.delete(
+            detail_url,
+            content_type="application/json"
+        )
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
