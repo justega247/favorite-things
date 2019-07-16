@@ -59,6 +59,13 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     permission_classes = (IsAuthenticated,)
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.queryset.filter(
+            favorite__user_id=self.request.user
+        ).distinct()
+        serializer = CategorySerializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 # Favorite things Related Views
 class FavoriteThingView(mixins.CreateModelMixin, generics.GenericAPIView):

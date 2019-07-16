@@ -4,6 +4,7 @@ from .views import (
     RegisterUsersView,
     LoginView,
     CategoryViewSet,
+    # CategoryListView,
     FavoriteThingView,
     FavoriteThingDetailView,
     FavoriteThingsList)
