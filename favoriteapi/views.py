@@ -74,6 +74,11 @@ class FavoriteThingView(mixins.CreateModelMixin, generics.GenericAPIView):
         ranking = data.get('ranking')
         category_id = data.get('category')
 
+        if ranking and ranking <= 0:
+            raise_error(
+                message='Sorry your ranking has to be a positive integer'
+            )
+
         existing_favorites = Favorite.objects.filter(
             user=self.request.user,
             category__id=category_id
@@ -110,11 +115,55 @@ class FavoriteThingView(mixins.CreateModelMixin, generics.GenericAPIView):
         serializer.save(user=self.request.user)
 
 
-class FavoriteThingDetailView(mixins.DestroyModelMixin, generics.RetrieveAPIView):
+class FavoriteThingDetailView(mixins.DestroyModelMixin, generics.RetrieveAPIView, generics.UpdateAPIView):
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
     serializer_class = FavoriteThingSerializer
     queryset = Favorite.objects.all()
     lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        favorite_thing_id = kwargs['id']
+        new_ranking = request.data.get('ranking')
+        favorite_to_update = Favorite.objects.get(id=favorite_thing_id)
+        previous_ranking = favorite_to_update.ranking
+
+        if new_ranking and new_ranking <= 0:
+            raise_error(
+                message='Sorry your ranking has to be a positive integer'
+            )
+
+        if not new_ranking or new_ranking == previous_ranking:
+            return self.partial_update(request, *args, **kwargs)
+
+        current_max = Favorite.objects.filter(
+            user=self.request.user,
+            category__id=favorite_to_update.category_id
+        ).aggregate(Max('ranking'))
+
+        current_max_ranking = current_max['ranking__max']
+        if not current_max_ranking:
+            raise_error(
+                message='You do not have a favorite thing to update in this category'
+            )
+
+        if previous_ranking > new_ranking:
+            Favorite.objects.filter(
+                category__id=favorite_to_update.category_id,
+                ranking__lt=previous_ranking,
+                ranking__gte=new_ranking
+            ).update(ranking=F('ranking') + 1)
+            return self.partial_update(request, *args, **kwargs)
+        elif previous_ranking < new_ranking <= current_max_ranking:
+            Favorite.objects.filter(
+                category__id=favorite_to_update.category_id,
+                ranking__gt=previous_ranking,
+                ranking__lte=new_ranking
+            ).update(ranking=F('ranking') - 1)
+            return self.partial_update(request, *args, **kwargs)
+        else:
+            raise_error(
+                message=f'The highest ranking you can update to at the moment is {current_max_ranking}'
+            )
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)

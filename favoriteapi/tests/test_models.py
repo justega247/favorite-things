@@ -30,6 +30,7 @@ class CategoryModelTest(TestCase):
 
 
 class FavoriteModelTest(TestCase):
+
     user1 = User.objects.create(username='passo', email='pass@mail.com', password='extended')
     category1 = Category.objects.create(category='phones')
     data = {"size": "medium"}
