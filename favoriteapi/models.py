@@ -30,3 +30,6 @@ class Favorite(models.Model):
     @property
     def owner(self):
         return self.user
+
+    class Meta:
+        ordering = ['ranking']
