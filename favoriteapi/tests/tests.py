@@ -183,6 +183,27 @@ class CategoryAPITest(BaseViewTest):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response.data['detail'], "Authentication credentials were not provided.")
 
+    def test_get_categories_where_user_has_favorites(self):
+        user = User.objects.filter(username='paddy').first()
+        favorite = self.create_favorite(user=user, metadata={"size": "medium"})
+        self.user_token(
+            data={
+                "username": "paddy",
+                "password": "fakepassword"
+            })
+        url = reverse(
+            "category-list",
+            kwargs={
+                "version": "v1"
+            }
+        )
+        response = self.client.get(
+            url,
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['category'], 'phones')
+
 
 class FavoriteAPITest(BaseViewTest):
     def test_create_first_favorite_thing_in_category_with_invalid_ranking_fails(self):
