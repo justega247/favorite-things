@@ -247,6 +247,8 @@ class FavoriteAPITest(BaseViewTest):
         self.assertEqual(response.data['user']['username'], 'paddy')
 
     def test_create_favorite_thing_in_same_category_success(self):
+        user = User.objects.filter(username='paddy').first()
+        favorite = self.create_favorite(user=user, metadata={"size": "medium"})
         self.user_token(
             data={
                 "username": "paddy",
@@ -262,7 +264,7 @@ class FavoriteAPITest(BaseViewTest):
             "title": "motorola",
             "description": "This is the next big thing",
             "ranking": 1,
-            "category": 1,
+            "category": 2,
             "metadata": {
                 "make": 2019,
                 "color": "black"
@@ -624,3 +626,25 @@ class FavoriteAPITest(BaseViewTest):
             content_type="application/json"
         )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_get_favorite_things_under_a_category_success(self):
+        user = User.objects.filter(username='pascal').first()
+        favorite = self.create_favorite(user=user, metadata={"size": "medium"})
+        self.user_token(
+            data={
+                "username": "pascal",
+                "password": "fakepassword"
+            })
+        url = reverse(
+            "favorite-category-list",
+            kwargs={
+                "version": "v1",
+                "category_id": 2
+            }
+        )
+        res = self.client.get(
+            url,
+            content_type="application/json"
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data['count'], 1)

@@ -175,3 +175,18 @@ class FavoriteThingDetailView(mixins.DestroyModelMixin, generics.RetrieveAPIView
         ).update(ranking=F('ranking') - 1)
         return instance.delete()
 
+
+class FavoriteThingsList(mixins.ListModelMixin, generics.GenericAPIView):
+    serializer_class = FavoriteThingSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        category_id = self.kwargs['category_id']
+        queryset = Favorite.objects.filter(
+            category_id=category_id,
+            user_id=self.request.user
+        )
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
