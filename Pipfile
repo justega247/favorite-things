@@ -13,6 +13,7 @@ psycopg2 = "*"
 djangorestframework-jwt = "*"
 django-nose = "*"
 coverage = "*"
+django-simple-history = "*"
 
 [requires]
 python_version = "3.7"

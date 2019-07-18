@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db.models import F, Max
+from django.shortcuts import get_object_or_404
 from rest_framework import status, generics, viewsets, mixins
 from rest_framework.views import APIView
 from rest_framework_jwt.settings import api_settings
@@ -197,3 +198,23 @@ class FavoriteThingsList(mixins.ListModelMixin, generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+
+class FavoriteThingAudit(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        favorite_id = kwargs['id']
+        favorite = get_object_or_404(Favorite, pk=favorite_id)
+        response = []
+        all_history = favorite.history.all()
+        changes = []
+        for i in range(0, len(all_history) - 1):
+            new_history, old_history = all_history[i], all_history[i + 1]
+            delta = new_history.diff_against(old_history)
+            changes = changes + delta.changes
+        for change in changes:
+            response.append(f'{change.field} changed from {change.old} to {change.new}')
+        return Response({
+            "audit": response
+        })

@@ -669,3 +669,46 @@ class FavoriteAPITest(BaseViewTest):
         )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data['count'], 1)
+
+
+class AuditViewTest(BaseViewTest):
+    def test_favorite_thing_audit_log_is_tracked_success(self):
+        user = User.objects.filter(username='pascal').first()
+        favorite = self.create_favorite(user=user, metadata={"size": "medium"})
+        favorite_id = favorite.id
+        self.user_token(
+            data={
+                "username": "pascal",
+                "password": "fakepassword"
+            })
+        url = reverse(
+            "detail-favorite",
+            kwargs={
+                "version": "v1",
+                "id": favorite_id
+            }
+        )
+        data = {
+            "title": "xiaoming",
+            "description": "This is the first of its kind",
+            "ranking": 1
+        }
+        self.client.patch(
+            url,
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+        audit_url = reverse(
+            "favorite-history",
+            kwargs={
+                "version": "v1",
+                "id": favorite.id
+            }
+        )
+        res = self.client.get(
+            audit_url,
+            content_type="application/json"
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn("audit", res.data)
+        self.assertIn('title changed from tecno to xiaoming', res.data["audit"])
