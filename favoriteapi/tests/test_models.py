@@ -1,8 +1,5 @@
 from django.test import TestCase
-from django.contrib.auth import get_user_model
 from ..models import Category, Favorite
-
-User = get_user_model()
 
 
 # Test Models
@@ -30,14 +27,11 @@ class CategoryModelTest(TestCase):
 
 
 class FavoriteModelTest(TestCase):
-
-    user1 = User.objects.create(username='passo', email='pass@mail.com', password='extended')
     category1 = Category.objects.create(category='phones')
     data = {"size": "medium"}
 
     @classmethod
     def setUpTestData(cls):
-        user1 = User.objects.create(username='paulo', email='paulo@mail.com', password='extended')
         category1 = Category.objects.create(category='phones')
         data = {"size": "medium"}
         Favorite.objects.create(
@@ -45,7 +39,6 @@ class FavoriteModelTest(TestCase):
             description='This is just a china phone',
             ranking=1,
             metadata=data,
-            user=user1,
             category=category1)
 
     def create_favorite(self,
@@ -53,14 +46,12 @@ class FavoriteModelTest(TestCase):
                         description='This is just a china phone',
                         ranking=1,
                         metadata=data,
-                        user=user1,
                         category=category1):
         return Favorite.objects.create(
             title=title,
             description=description,
             ranking=ranking,
             metadata=metadata,
-            user=user,
             category=category)
 
     def test_the_favorite_instance(self):
