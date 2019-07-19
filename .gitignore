@@ -4,3 +4,5 @@
 cover/
 __pycache__/
 client/node_modules/
+.vscode/
+.pyc
