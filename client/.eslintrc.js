@@ -1,11 +1,19 @@
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
   parserOptions: {
-    sourceType: "module"
+    sourceType: "module",
+    parser: "babel-eslint"
   },
   // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
-  extends: "standard",
+  extends: [
+    "standard",
+    "plugin:vue/recommended"
+  ],
   // required to lint *.vue files
-  plugins: ["html"]
+  plugins: ["html", "vue"]
 };

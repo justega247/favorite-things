@@ -1,5 +1,5 @@
 const path = require('path');
-
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
   entry: {
@@ -9,17 +9,27 @@ module.exports = {
     rules: [
       {
         enforce: "pre",
-        test: /(\.js$)/,
+        test: /(\.js$)|(\.vue$)/,
         loader: "eslint-loader",
         exclude: /node_modules/
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      },
+      {
+        test: /\.s?css$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
       }
     ]
   },
-  resolve: {
-    alias: {
-      vue: 'vue/dist/vue.js'
-    }
-  },
+  plugins: [
+    new VueLoaderPlugin()
+  ],
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/',
