@@ -1,5 +1,5 @@
 <template>
-  <div class="landing_image">
+  <div class="landing__image">
     <nav
       class="navbar"
       role="navigation"

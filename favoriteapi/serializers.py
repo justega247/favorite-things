@@ -22,13 +22,12 @@ class FavoriteThingSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['user']
 
-    def validate(self, data):
-        metadata = data.get('metadata', None)
+    def validate_metadata(self, metadata):
         valid_types = [str, int, datetime.date, enum.Enum]
         if metadata:
             for key, value in metadata.items():
                 if type(metadata[key]) not in valid_types:
                     raise serializers.ValidationError(
-                        'The metadata fields can only contain text, numbers, dates and enumerables'
+                        'The metadata field can only contain text, numbers, dates and enumerables'
                     )
-        return data
+        return metadata
