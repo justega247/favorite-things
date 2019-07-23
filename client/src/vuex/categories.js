@@ -12,7 +12,11 @@ const actions = {
   addCategory ({ commit }, categoryData) {
     return appService.addCategory(categoryData).then(data => {
       commit('addCategory', { category: data })
-      console.log('#####$$$', data)
+    })
+  },
+  getCategories ({ commit }) {
+    return appService.getCategories().then(categories => {
+      commit('getCategories', categories)
     })
   }
 }
@@ -22,6 +26,9 @@ const mutations = {
     state.categories = [
       ...state.categories, category.category
     ]
+  },
+  getCategories (state, categories) {
+    state.categories = categories
   }
 }
 

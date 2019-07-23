@@ -14,6 +14,16 @@ const appService = {
           reject(err)
         })
     })
+  },
+  getCategories () {
+    return new Promise((resolve, reject) => {
+      axios.get(`${config.apiUrl}${backendRoutes.CATEGORY}`)
+        .then(response => {
+          resolve(response.data)
+        }).catch(err => {
+          reject(err)
+        })
+    })
   }
 }
 

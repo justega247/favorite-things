@@ -1,9 +1,12 @@
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
 
 module.exports = {
   entry: {
-    app: path.resolve(__dirname, '../src/client-entry.js')
+    app: path.resolve(__dirname, '../src/client-entry.js'),
+    vendor: ['vue', 'vue-router', 'vuex', 'axios']
   },
   module: {
     rules: [
@@ -20,10 +23,17 @@ module.exports = {
       {
         test: /\.s?css$/,
         use: [
-          'vue-style-loader',
+          process.env.NODE_ENV !== 'production'
+            ? 'vue-style-loader'
+            : MiniCssExtractPlugin.loader,
           'css-loader',
           'sass-loader'
         ]
+      },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/
       }
     ]
   },
