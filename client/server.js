@@ -1,9 +1,12 @@
 import express from 'express';
 import path from'path';
 import fs from 'fs';
+import cors from 'cors';
 import devServer from './build/dev-server';
 
 const app = express();
+
+app.use(cors())
 
 const indexHTML = (() => {
   return fs.readFileSync(path.resolve(__dirname, './index.html'), 'utf-8')

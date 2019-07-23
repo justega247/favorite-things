@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_nose',
     'simple_history',
-    'favoriteapi'
+    'favoriteapi',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -51,7 +52,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'simple_history.middleware.HistoryRequestMiddleware'
+    'simple_history.middleware.HistoryRequestMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'favorite_things.urls'
@@ -133,6 +135,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'favoriteapi.pagination.FavoriteThingPagination',
 }
 
+CORS_ORIGIN_ALLOW_ALL = True
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 

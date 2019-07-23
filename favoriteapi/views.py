@@ -18,6 +18,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (AllowAny,)
+    pagination_class = None
 
 
 # Favorite things Related Views
