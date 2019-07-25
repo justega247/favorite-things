@@ -8,18 +8,19 @@
           :key="category.id"
           class="column is-one-quarter"
         >
-          <app-category :link="category.created_at">
+          <app-category>
             <h3
               slot="category"
             >
-              {{ category.category.toUpperCase() }}
+              {{ category.category }}
             </h3>
             <router-link
-              slot="favorite"
+              slot="favorites"
               class="nav-item is-tab button is-primary is-outlined"
-              to="/"
+              :to="{ name: 'category-favorites', params: { categoryId: category.id }}"
+              exact
             >
-              View all favorite {{ category.category }}
+              View all favorite {{ category.category.toLowerCase() }}
             </router-link>
           </app-category>
         </div>

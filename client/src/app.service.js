@@ -24,6 +24,36 @@ const appService = {
           reject(err)
         })
     })
+  },
+  getCategoryFavorites (categoryId) {
+    return new Promise((resolve, reject) => {
+      axios.get(`${config.apiUrl}${backendRoutes.CATEGORY_FAVORITES}/${categoryId}`)
+        .then(response => {
+          resolve(response.data)
+        }).catch(err => {
+          reject(err)
+        })
+    })
+  },
+  getCategory (categoryId) {
+    return new Promise((resolve, reject) => {
+      axios.get(`${config.apiUrl}${backendRoutes.CATEGORY}${categoryId}/`)
+        .then(response => {
+          resolve(response.data)
+        }).catch(err => {
+          reject(err)
+        })
+    })
+  },
+  deleteFavorite (favoriteId) {
+    return new Promise((resolve, reject) => {
+      axios.delete(`${config.apiUrl}${backendRoutes.FAVORITE}${favoriteId}`)
+        .then(response => {
+          resolve(response.data)
+        }).catch(err => {
+          reject(err)
+        })
+    })
   }
 }
 
