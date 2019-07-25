@@ -11,7 +11,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         for key, value in validated_data.items():
-            validated_data[key] = value.lower()
+            validated_data[key] = value.upper()
         instance, _ = Category.objects.get_or_create(**validated_data)
         return instance
 

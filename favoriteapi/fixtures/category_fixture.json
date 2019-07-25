@@ -3,7 +3,7 @@
     "model": "favoriteapi.category",
     "pk": 1,
     "fields": {
-      "category": "person",
+      "category": "PERSON",
       "created_at": "2019-07-22 10:43:51.161747",
       "modified_at": "2019-07-22 10:43:51.161747"
     }
@@ -12,7 +12,7 @@
     "model": "favoriteapi.category",
     "pk": 2,
     "fields": {
-      "category": "place",
+      "category": "PLACE",
       "created_at": "2019-07-22 10:43:51.161747",
       "modified_at": "2019-07-22 10:43:51.161747"
     }
@@ -21,7 +21,7 @@
     "model": "favoriteapi.category",
     "pk": 3,
     "fields": {
-      "category": "food",
+      "category": "FOOD",
       "created_at": "2019-07-22 10:43:51.161747",
       "modified_at": "2019-07-22 10:43:51.161747"
     }

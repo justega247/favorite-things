@@ -59,8 +59,11 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
   .navbar-brand {
     padding: 0 0.8125rem;
+  }
+  a {
+    color: lighten($color: #000000, $amount: 40%)
   }
 </style>

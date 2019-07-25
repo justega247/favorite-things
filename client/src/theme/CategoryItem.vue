@@ -6,18 +6,16 @@
       </p>
     </div>
     <footer class="card-footer">
-      <a
+      <p
         class="card-footer-item"
-        :href="link"
       >
-        <slot name="favorite" />
-      </a>
+        <slot name="favorites" />
+      </p>
     </footer>
   </div>
 </template>
 <script>
 export default {
-  props: ['link']
 }
 </script>
 <style scoped>

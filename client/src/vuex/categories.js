@@ -1,11 +1,14 @@
 import appService from '../app.service.js'
 
 const state = {
-  categories: []
+  categories: [],
+  categoryFavorites: [],
+  category: {}
 }
 
 const getters = {
-  categories: state => state.categories
+  categories: state => state.categories,
+  categoryFavorites: state => state.categoryFavorites
 }
 
 const actions = {
@@ -18,6 +21,19 @@ const actions = {
     return appService.getCategories().then(categories => {
       commit('getCategories', categories)
     })
+  },
+  getCategoryFavorites ({ commit }, categoryId) {
+    return appService.getCategoryFavorites(categoryId).then(data => {
+      commit('getCategoryFavorites', { categoryFavorites: data })
+    })
+  },
+  getCategory ({ commit }, categoryId) {
+    return appService.getCategory(categoryId).then(category => {
+      commit('getCategory', category)
+    })
+  },
+  deleteFavorite ({ commit }, favoriteId) {
+    return appService.deleteFavorite(favoriteId).then(() => {})
   }
 }
 
@@ -29,6 +45,12 @@ const mutations = {
   },
   getCategories (state, categories) {
     state.categories = categories
+  },
+  getCategoryFavorites (state, categories) {
+    state.categoryFavorites = categories.categoryFavorites
+  },
+  getCategory (state, category) {
+    state.category = category
   }
 }
 

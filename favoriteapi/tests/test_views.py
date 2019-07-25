@@ -43,7 +43,7 @@ class CategoryAPITest(BaseViewTest):
             content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['category'], data['category'].lower())
+        self.assertEqual(response.data['category'], data['category'].upper())
 
 
 class FavoriteAPITest(BaseViewTest):
@@ -430,7 +430,6 @@ class FavoriteAPITest(BaseViewTest):
             content_type="application/json"
         )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data['count'], 1)
 
 
 class AuditViewTest(BaseViewTest):
