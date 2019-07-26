@@ -43,7 +43,14 @@
   </div>
 </template>
 <script>
+import Vue from 'vue'
+import VueToast from 'vue-toast-notification'
+import 'vue-toast-notification/dist/index.css'
+
+Vue.use(VueToast)
+
 export default {
+  name: 'DeleteFavoriteModal',
   props: {
     favoriteId: {
       type: Number,
@@ -58,6 +65,11 @@ export default {
     deleteFavorite () {
       this.$store.dispatch('categoryModule/deleteFavorite', this.favoriteId)
         .then(() => {
+          Vue.$toast.open({
+            message: 'Favorite deleted Successfully',
+            type: 'success',
+            position: 'top-right'
+          })
           this.$emit('closeDeleteFavoriteModal')
           this.$emit('loadFavorite')
         })

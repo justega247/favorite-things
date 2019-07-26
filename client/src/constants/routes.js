@@ -7,5 +7,6 @@ export const backendRoutes = {
 export const frontendRoutes = {
   LANDING: '/',
   VIEW_CATEGORIES: '/categories',
-  VIEW_CATEGORY_FAVORITES: '/category/:categoryId/favorites'
+  VIEW_CATEGORY_FAVORITES: '/category/:categoryId/favorites',
+  CREATE_FAVORITE: '/favorite'
 }

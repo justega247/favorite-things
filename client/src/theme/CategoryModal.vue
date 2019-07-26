@@ -55,8 +55,15 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import VueToast from 'vue-toast-notification'
+import 'vue-toast-notification/dist/index.css'
 import Errors from '../helpers/errors'
+
+Vue.use(VueToast)
+
 export default {
+  name: 'CreateCategoryModal',
   data () {
     return {
       categoryName: '',
@@ -67,6 +74,11 @@ export default {
     addCategory () {
       this.$store.dispatch('categoryModule/addCategory', { category: this.categoryName })
         .then(() => {
+          Vue.$toast.open({
+            message: 'New Category created Successfully',
+            type: 'success',
+            position: 'top-right'
+          })
           this.categoryName = ''
         })
         .catch((err) => this.errors.record(err.response.data))

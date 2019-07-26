@@ -22,8 +22,8 @@ const actions = {
       commit('getCategories', categories)
     })
   },
-  getCategoryFavorites ({ commit }, categoryId) {
-    return appService.getCategoryFavorites(categoryId).then(data => {
+  getCategoryFavorites ({ commit }, { categoryId, limit, offset }) {
+    return appService.getCategoryFavorites({ categoryId, limit, offset }).then(data => {
       commit('getCategoryFavorites', { categoryFavorites: data })
     })
   },
