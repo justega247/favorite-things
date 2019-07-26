@@ -15,7 +15,7 @@
               {{ category.category }}
             </h3>
             <router-link
-              slot="favorites"
+              slot="favorites-link"
               class="nav-item is-tab button is-primary is-outlined"
               :to="{ name: 'category-favorites', params: { categoryId: category.id }}"
               exact
@@ -33,6 +33,7 @@ import Header from './Header.vue'
 import SingleCategory from './CategoryItem.vue'
 import { mapGetters } from 'vuex'
 export default {
+  name: 'CategoriesView',
   components: {
     'app-category': SingleCategory,
     heading: Header

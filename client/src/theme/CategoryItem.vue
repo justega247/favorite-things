@@ -9,13 +9,14 @@
       <p
         class="card-footer-item"
       >
-        <slot name="favorites" />
+        <slot name="favorites-link" />
       </p>
     </footer>
   </div>
 </template>
 <script>
 export default {
+  name: 'CategoryItem'
 }
 </script>
 <style scoped>

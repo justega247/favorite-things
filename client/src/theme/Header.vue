@@ -23,12 +23,12 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a
+              <router-link
                 class="button is-primary is-outlined"
-                @click="showCategoryModal = true"
+                :to="{ name: 'favorite' }"
               >
                 Add Favorite
-              </a>
+              </router-link>
               <a
                 class="button is-primary is-outlined"
                 @click="showCategoryModal = true"
@@ -49,6 +49,7 @@
 <script>
 import categoryModal from './CategoryModal.vue'
 export default {
+  name: 'Header',
   components: {
     'category-modal': categoryModal
   },

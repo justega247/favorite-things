@@ -25,9 +25,9 @@ const appService = {
         })
     })
   },
-  getCategoryFavorites (categoryId) {
+  getCategoryFavorites ({ categoryId, limit, offset }) {
     return new Promise((resolve, reject) => {
-      axios.get(`${config.apiUrl}${backendRoutes.CATEGORY_FAVORITES}/${categoryId}`)
+      axios.get(`${config.apiUrl}${backendRoutes.CATEGORY_FAVORITES}/${categoryId}?limit=${limit}&offset=${offset}`)
         .then(response => {
           resolve(response.data)
         }).catch(err => {
@@ -48,6 +48,16 @@ const appService = {
   deleteFavorite (favoriteId) {
     return new Promise((resolve, reject) => {
       axios.delete(`${config.apiUrl}${backendRoutes.FAVORITE}${favoriteId}`)
+        .then(response => {
+          resolve(response.data)
+        }).catch(err => {
+          reject(err)
+        })
+    })
+  },
+  addFavorite (favoriteData) {
+    return new Promise((resolve, reject) => {
+      axios.post(`${config.apiUrl}${backendRoutes.FAVORITE}`, favoriteData)
         .then(response => {
           resolve(response.data)
         }).catch(err => {

@@ -9,6 +9,8 @@
             <th>Ranking</th>
             <th><abbr title="Title">Title</abbr></th>
             <th><abbr title="Description">Description</abbr></th>
+            <th><abbr title="Created Date">Created</abbr></th>
+            <th><abbr title="Modified Date">Modified</abbr></th>
             <th><abbr title="View Details">Details</abbr></th>
             <th><abbr title="Edit">Edit</abbr></th>
             <th><abbr title="Delete">Delete</abbr></th>
@@ -16,18 +18,32 @@
         </thead>
         <tbody>
           <tr
-            v-for="favorite in categoryFavorites"
+            v-for="favorite in categoryFavorites.results"
             :key="favorite.id"
           >
             <td>{{ favorite.ranking }}</td>
             <td>{{ favorite.title }}</td>
-            <td>{{ favorite.description }}</td>
+            <td>{{ favorite.description.substring(0, 18).concat('...') }}</td>
+            <td>{{ formatDate(favorite.created_at) }}</td>
+            <td>{{ formatDate(favorite.modified_at) }}</td>
             <td><a>Details</a></td>
             <td><a>Edit</a></td>
             <td><a @click="openDeleteModal(favorite)">Delete</a></td>
           </tr>
         </tbody>
       </table>
+      <div class="pager">
+        <paginate
+          :page-count="Math.ceil(categoryFavorites.count/limit)"
+          :page-range="3"
+          :margin-pages="2"
+          :click-handler="paginator"
+          :prev-text="'Prev'"
+          :next-text="'Next'"
+          :container-class="'pagination'"
+          :page-class="'page-item'"
+        />
+      </div>
     </div>
     <delete-modal
       v-show="showDeleteModal"
@@ -42,7 +58,9 @@
 import DeleteModal from './FavoriteDeleteModal.vue'
 import Header from './Header.vue'
 import { mapGetters, mapState } from 'vuex'
+import moment from 'moment'
 export default {
+  name: 'CategoryFavorites',
   components: {
     heading: Header,
     deleteModal: DeleteModal
@@ -51,7 +69,8 @@ export default {
     return {
       showDeleteModal: false,
       selectedFavoriteId: 0,
-      selectedFavoriteName: ''
+      selectedFavoriteName: '',
+      limit: 10
     }
   },
   computed: {
@@ -74,11 +93,23 @@ export default {
     },
     loadCategoryFavorites () {
       const categoryId = this.$route.params.categoryId
-      this.$store.dispatch('categoryModule/getCategoryFavorites', categoryId)
+      const limit = this.limit
+      const offset = 0
+      this.$store.dispatch('categoryModule/getCategoryFavorites', { categoryId, limit, offset })
     },
     getCategory () {
       const categoryId = this.$route.params.categoryId
       this.$store.dispatch('categoryModule/getCategory', categoryId)
+    },
+    formatDate (date) {
+      return moment(date).format('L')
+    },
+    paginator (num) {
+      const categoryId = this.$route.params.categoryId
+      const pageLimit = this.limit
+      const offset = (num - 1) * pageLimit
+      console.log(this.limit, offset)
+      this.$store.dispatch('categoryModule/getCategoryFavorites', { categoryId, pageLimit, offset })
     }
   }
 }
@@ -87,6 +118,7 @@ export default {
   .container {
     display: flex;
     justify-content: center;
+    flex-direction: column;
   }
   a {
     color: #1426bd;
@@ -98,4 +130,9 @@ export default {
   h1 {
     text-align: center;
   }
+  .pager {
+    margin: 0px 500px;
+    max-width: 100%;
+  }
+
 </style>
