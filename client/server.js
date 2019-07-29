@@ -4,6 +4,8 @@ import fs from 'fs';
 import cors from 'cors';
 import devServer from './build/dev-server';
 
+const isProd = typeof process.env.NODE_ENV !== 'undefined' && (process.env.NODE_ENV === 'production')
+
 const app = express();
 
 app.use(cors())
@@ -12,7 +14,11 @@ const indexHTML = (() => {
   return fs.readFileSync(path.resolve(__dirname, './index.html'), 'utf-8')
 })()
 
-app.use('/dist', express.static(path.resolve(__dirname, './dist')))
+if (isProd) {
+  app.use('/', express.static(path.resolve(__dirname, './dist')))
+} else {
+  app.use('/dist', express.static(path.resolve(__dirname, './dist')))
+}
 
 devServer(app);
 

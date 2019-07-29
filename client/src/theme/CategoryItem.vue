@@ -5,7 +5,7 @@
         <slot name="category" />
       </p>
     </div>
-    <footer class="card-footer">
+    <footer class="card-footer has-background-white-bis">
       <p
         class="card-footer-item"
       >
@@ -14,11 +14,13 @@
     </footer>
   </div>
 </template>
+
 <script>
 export default {
   name: 'CategoryItem'
 }
 </script>
+
 <style scoped>
   .card {
     padding-bottom: 40px;

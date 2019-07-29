@@ -112,7 +112,7 @@
                 <font-awesome-icon
                   v-show="k == metadata.length-1"
                   icon="plus-square"
-                  class="has-text-success icon is-medium"
+                  class="has-text-primary icon is-medium"
                   @click="add(k)"
                 />
               </span>
@@ -128,7 +128,7 @@
       <div class="field">
         <div class="control">
           <button
-            class="button is-success"
+            class="button is-primary"
             @click="addFavorite()"
           >
             Create Favorite
@@ -138,6 +138,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import Vue from 'vue'
 import VueToast from 'vue-toast-notification'
@@ -155,7 +156,6 @@ export default {
   },
   data () {
     return {
-      isEdit: false,
       title: '',
       description: '',
       category: 0,
@@ -197,7 +197,9 @@ export default {
       const category = this.category
       const ranking = parseInt(this.ranking)
       this.metadata.forEach(entry => {
-        metadata[entry.key] = entry.value
+        if (entry.key !== '' && entry.value !== '') {
+          metadata[entry.key] = entry.value
+        }
       })
       this.$store.dispatch('favoriteModule/addFavorite', {
         title,
@@ -211,18 +213,8 @@ export default {
           type: 'success',
           position: 'top-right'
         })
-        this.title = ''
-        this.description = ''
-        this.category = 0
-        this.ranking = null
-        this.metadata = [
-          {
-            key: '',
-            value: ''
-          }
-        ]
+        this.$router.push({ name: 'category-favorites', params: { categoryId: category } })
       }).catch((err) => {
-        console.log(err.response.data)
         if (err.response.data.status) {
           Vue.$toast.open({
             message: err.response.data.message,
@@ -236,6 +228,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
   .container {
     width: 30%;

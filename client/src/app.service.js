@@ -64,6 +64,26 @@ const appService = {
           reject(err)
         })
     })
+  },
+  getFavorite (favoriteId) {
+    return new Promise((resolve, reject) => {
+      axios.get(`${config.apiUrl}${backendRoutes.FAVORITE}${favoriteId}`)
+        .then(response => {
+          resolve(response.data)
+        }).catch(err => {
+          reject(err)
+        })
+    })
+  },
+  getFavoriteAudit (favoriteId) {
+    return new Promise((resolve, reject) => {
+      axios.get(`${config.apiUrl}${backendRoutes.FAVORITE_HISTORY}${favoriteId}`)
+        .then(response => {
+          resolve(response.data.audit)
+        }).catch(err => {
+          reject(err)
+        })
+    })
   }
 }
 

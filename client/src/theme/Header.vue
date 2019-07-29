@@ -11,7 +11,13 @@
             class="nav-item is-tab"
             to="/"
           >
-            <h1>Favorite Things App</h1>
+            <h1>Favorite Things</h1>
+          </router-link>
+          <router-link
+            class="button is-primary ctg__button"
+            to="/categories"
+          >
+            <p>View Categories</p>
           </router-link>
         </div>
       </div>
@@ -46,6 +52,7 @@
     />
   </div>
 </template>
+
 <script>
 import categoryModal from './CategoryModal.vue'
 export default {
@@ -60,6 +67,7 @@ export default {
   }
 }
 </script>
+
 <style lang="scss" scoped>
   .navbar-brand {
     padding: 0 0.8125rem;

@@ -467,4 +467,4 @@ class AuditViewTest(BaseViewTest):
         )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn("audit", res.data)
-        self.assertIn('title changed from tecno to xiaoming', res.data["audit"])
+        self.assertIn('Title changed from tecno to xiaoming', res.data["audit"])

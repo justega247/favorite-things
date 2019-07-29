@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "cross-env NODE_ENV=production babel-node server.js",
+    "dev": "rimraf ./dist && cross-env NODE_ENV=development babel-node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:client": "cross-env NODE_ENV=production webpack --config ./build/webpack.client.config.js --progress --hide-modules",
+    "build": "rimraf ./dist && npm run build:client"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +19,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.9.0",
     "@fortawesome/vue-fontawesome": "^0.1.6",
     "axios": "^0.19.0",
+    "babel-polyfill": "^6.26.0",
     "bulma": "^0.7.5",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",

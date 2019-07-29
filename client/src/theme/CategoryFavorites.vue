@@ -26,8 +26,20 @@
             <td>{{ favorite.description.substring(0, 18).concat('...') }}</td>
             <td>{{ formatDate(favorite.created_at) }}</td>
             <td>{{ formatDate(favorite.modified_at) }}</td>
-            <td><a>Details</a></td>
-            <td><a>Edit</a></td>
+            <td>
+              <router-link
+                :to="{ name: 'favorite-detail', params: { favoriteId: favorite.id }}"
+              >
+                Details
+              </router-link>
+            </td>
+            <td>
+              <router-link
+                :to="{ name: 'favorite-edit', params: { favoriteId: favorite.id }}"
+              >
+                Edit
+              </router-link>
+            </td>
             <td><a @click="openDeleteModal(favorite)">Delete</a></td>
           </tr>
         </tbody>
@@ -47,13 +59,14 @@
     </div>
     <delete-modal
       v-show="showDeleteModal"
-      :favoriteId="selectedFavoriteId"
-      :favoriteName="selectedFavoriteName"
+      :favorite-id="selectedFavoriteId"
+      :favorite-name="selectedFavoriteName"
       @closeDeleteFavoriteModal="showDeleteModal = false"
       @loadFavorite="()=>loadCategoryFavorites()"
     />
   </div>
 </template>
+
 <script>
 import DeleteModal from './FavoriteDeleteModal.vue'
 import Header from './Header.vue'
@@ -108,12 +121,12 @@ export default {
       const categoryId = this.$route.params.categoryId
       const pageLimit = this.limit
       const offset = (num - 1) * pageLimit
-      console.log(this.limit, offset)
       this.$store.dispatch('categoryModule/getCategoryFavorites', { categoryId, pageLimit, offset })
     }
   }
 }
 </script>
+
 <style scoped>
   .container {
     display: flex;

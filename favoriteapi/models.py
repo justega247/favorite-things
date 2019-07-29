@@ -38,5 +38,9 @@ class Favorite(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def category_name(self):
+        return self.category.category
+
     class Meta:
         ordering = ['ranking']
