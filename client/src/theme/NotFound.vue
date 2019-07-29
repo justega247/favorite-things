@@ -1,8 +1,17 @@
 <template>
-  <div>Oops, Page not found!</div>
+  <div>
+    <heading />
+    <h1>Oops, Page not found!</h1>
+  </div>
 </template>
+
 <script>
+import Header from './Header.vue'
+
 export default {
-  name: 'NotFoundPage'
+  name: 'NotFoundPage',
+  components: {
+    heading: Header
+  }
 }
 </script>

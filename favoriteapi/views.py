@@ -45,7 +45,7 @@ class FavoriteThingView(mixins.CreateModelMixin, generics.GenericAPIView):
         )
         if ranking != 1 and not existing_favorites:
             raise_error(
-                message=f'The first valid ranking for a favorite in this category is 1'
+                message=f'The first valid ranking for a favorite is 1'
             )
         if not existing_favorites:
             return self.create(request, *args, **kwargs)
@@ -82,7 +82,9 @@ class FavoriteThingDetailView(mixins.DestroyModelMixin, generics.RetrieveAPIView
 
     def put(self, request, *args, **kwargs):
         favorite_thing_id = kwargs['id']
+        print(favorite_thing_id)
         new_ranking = request.data.get('ranking')
+        print(request.data)
         favorite_to_update = get_object_or_404(Favorite, id=favorite_thing_id)
         previous_ranking = favorite_to_update.ranking
 
@@ -170,7 +172,7 @@ class FavoriteThingAudit(APIView):
             delta = new_history.diff_against(old_history)
             changes = changes + delta.changes
         for change in changes:
-            response.append(f'{change.field} changed from {change.old} to {change.new}')
+            response.append(f'{change.field.capitalize()} changed from {change.old} to {change.new}')
         return Response({
             "audit": response
         })

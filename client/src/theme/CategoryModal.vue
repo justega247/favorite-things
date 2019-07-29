@@ -38,7 +38,7 @@
       </section>
       <footer class="modal-card-foot">
         <button
-          class="button is-success"
+          class="button is-primary"
           @click="addCategory()"
         >
           Save
@@ -80,6 +80,7 @@ export default {
             position: 'top-right'
           })
           this.categoryName = ''
+          this.$router.push({ name: 'categories' })
         })
         .catch((err) => this.errors.record(err.response.data))
     }

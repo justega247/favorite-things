@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import Vue from 'vue'
 import Paginate from 'vuejs-paginate'
 import { library } from '@fortawesome/fontawesome-svg-core'

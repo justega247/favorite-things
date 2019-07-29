@@ -15,6 +15,7 @@ django-nose = "*"
 coverage = "*"
 django-simple-history = "*"
 django-cors-headers = "*"
+cryptography = "*"
 
 [requires]
 python_version = "3.7"

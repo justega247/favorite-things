@@ -17,10 +17,11 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class FavoriteThingSerializer(serializers.ModelSerializer):
+    category_name = serializers.ReadOnlyField()
+
     class Meta:
         model = Favorite
         fields = '__all__'
-        read_only_fields = ['user']
 
     def validate_metadata(self, metadata):
         valid_types = [str, int, datetime.date, enum.Enum]
