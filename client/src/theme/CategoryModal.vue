@@ -80,6 +80,7 @@ export default {
             position: 'top-right'
           })
           this.categoryName = ''
+          this.$emit('closeCategoryModal')
           this.$router.push({ name: 'categories' })
         })
         .catch((err) => this.errors.record(err.response.data))

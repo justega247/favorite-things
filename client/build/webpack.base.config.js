@@ -65,6 +65,7 @@ module.exports = {
       }
     ]
   },
+  devtool: process.env.NODE_ENV !== 'production' ? 'cheap-module-eval-source-map' : 'inline-source-map',
   node: {
     fs: "empty"
   },

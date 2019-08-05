@@ -16,6 +16,7 @@ coverage = "*"
 django-simple-history = "*"
 django-cors-headers = "*"
 cryptography = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
