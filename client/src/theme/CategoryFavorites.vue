@@ -26,21 +26,34 @@
             <td>{{ favorite.description.substring(0, 18).concat('...') }}</td>
             <td>{{ formatDate(favorite.created_at) }}</td>
             <td>{{ formatDate(favorite.modified_at) }}</td>
-            <td>
+            <td class="detail">
               <router-link
                 :to="{ name: 'favorite-detail', params: { favoriteId: favorite.id }}"
               >
-                Details
+                <font-awesome-icon
+                  icon="file-alt"
+                  class="has-text-primary icon is-small"
+                />
               </router-link>
             </td>
-            <td>
+            <td class="edit">
               <router-link
                 :to="{ name: 'favorite-edit', params: { favoriteId: favorite.id }}"
               >
-                Edit
+                <font-awesome-icon
+                  icon="edit"
+                  class="has-text-info icon is-small"
+                />
               </router-link>
             </td>
-            <td><a @click="openDeleteModal(favorite)">Delete</a></td>
+            <td class="delete-icon">
+              <a @click="openDeleteModal(favorite)">
+                <font-awesome-icon
+                  icon="trash-alt"
+                  class="has-text-danger icon is-small"
+                />
+              </a>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -147,5 +160,13 @@ export default {
     margin: 0px 500px;
     max-width: 100%;
   }
-
+  .detail {
+    padding-left: 30px;
+  }
+  .edit {
+    padding-left: 20px;
+  }
+  .delete-icon {
+    padding-left: 25px;
+  }
 </style>
