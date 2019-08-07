@@ -23,7 +23,7 @@
           >
             <td>{{ favorite.ranking }}</td>
             <td>{{ favorite.title }}</td>
-            <td>{{ favorite.description.substring(0, 18).concat('...') }}</td>
+            <td>{{ favorite.description.length > 18 ? favorite.description.substring(0, 18).concat('...') : favorite.description }}</td>
             <td>{{ formatDate(favorite.created_at) }}</td>
             <td>{{ formatDate(favorite.modified_at) }}</td>
             <td class="detail">
@@ -82,7 +82,7 @@
 
 <script>
 import DeleteModal from './FavoriteDeleteModal.vue'
-import Header from './Header.vue'
+import Header from '../components/Header.vue'
 import { mapGetters, mapState } from 'vuex'
 import moment from 'moment'
 export default {

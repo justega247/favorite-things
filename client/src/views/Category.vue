@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import Header from './Header.vue'
+import Header from '../components/Header.vue'
 import SingleCategory from './CategoryItem.vue'
 import { mapGetters } from 'vuex'
 export default {

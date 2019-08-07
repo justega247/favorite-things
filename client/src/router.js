@@ -1,17 +1,17 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Landing from './theme/Landing.vue'
-import Category from './theme/Category.vue'
-import CategoryFavorites from './theme/CategoryFavorites.vue'
-import NotFound from './theme/NotFound.vue'
-import CreateFavorite from './theme/CreateFavorite.vue'
-import EditFavorite from './theme/EditFavorite.vue'
-import FavoriteDetail from './theme/FavoriteDetail.vue'
+import Router from 'vue-router'
+import Landing from './views/Landing.vue'
+import Category from './views/Category.vue'
+import CategoryFavorites from './views/CategoryFavorites.vue'
+import NotFound from './views/NotFound.vue'
+import CreateFavorite from './views/CreateFavorite.vue'
+import EditFavorite from './views/EditFavorite.vue'
+import FavoriteDetail from './views/FavoriteDetail.vue'
 import { frontendRoutes } from './constants/routes'
 
-Vue.use(VueRouter)
+Vue.use(Router)
 
-const router = new VueRouter({
+export default new Router({
   mode: 'history',
   linkActiveClass: 'is-active',
   scrollBehavior: (to, from, savedPosition) => ({ y: 0 }),
@@ -25,5 +25,3 @@ const router = new VueRouter({
     { path: '*', component: NotFound }
   ]
 })
-
-export default router

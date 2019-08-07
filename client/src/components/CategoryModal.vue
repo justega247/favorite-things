@@ -11,7 +11,7 @@
         <button
           class="delete"
           aria-label="close"
-          @click="$emit('closeCategoryModal')"
+          @click="clearInput()"
         />
       </header>
       <section class="modal-card-body">
@@ -45,7 +45,7 @@
         </button>
         <button
           class="button"
-          @click="$emit('closeCategoryModal')"
+          @click="clearInput()"
         >
           Cancel
         </button>
@@ -84,6 +84,10 @@ export default {
           this.$router.push({ name: 'categories' })
         })
         .catch((err) => this.errors.record(err.response.data))
+    },
+    clearInput () {
+      this.categoryName = ''
+      this.$emit('closeCategoryModal')
     }
   }
 }

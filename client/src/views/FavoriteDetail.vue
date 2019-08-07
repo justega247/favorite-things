@@ -16,7 +16,7 @@
         <hr>
         <h2><strong>Ranking:</strong> {{ favorite.ranking }}</h2>
         <hr>
-        <h2><strong>Category:</strong> {{ favorite.category_name.toLowerCase() }}</h2>
+        <h2><strong>Category:</strong> {{ favorite.category_name | capitalize }}</h2>
         <hr>
         <h2><strong>Created:</strong> {{ formatDate(favorite.created_at) }}</h2>
         <hr>
@@ -24,10 +24,16 @@
         <hr>
         <h2><strong>Metadata:</strong></h2>
         <div
+          v-if="checkIsEmpty(favorite.metadata)"
+        >
+          <p>No metadata for this favorite</p>
+        </div>
+        <div
+          v-else
           v-for="(data, index) in Object.entries(favorite.metadata)"
           :key="index"
         >
-          <h4>{{ data[0] }}: {{ data[1] }}</h4>
+          <h4>{{ data[0] | capitalize }}: {{ data[1] }}</h4>
         </div>
       </div>
       <div
@@ -59,8 +65,9 @@
 
 <script>
 import moment from 'moment'
+import isEmpty from 'lodash.isempty'
 import { mapGetters } from 'vuex'
-import Header from './Header.vue'
+import Header from '../components/Header.vue'
 
 export default {
   name: 'FavoriteDetailView',
@@ -101,6 +108,9 @@ export default {
     },
     formatDate (date) {
       return moment(date).format('L')
+    },
+    checkIsEmpty (obj) {
+      return isEmpty(obj)
     }
   }
 }

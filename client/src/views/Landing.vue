@@ -35,3 +35,9 @@ export default {
   name: 'Landing'
 }
 </script>
+
+<style scoped>
+  h1 {
+    margin-left: 15px;
+  }
+</style>

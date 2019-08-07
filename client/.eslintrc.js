@@ -1,19 +1,17 @@
 module.exports = {
   root: true,
-  "env": {
-    "browser": true,
-    "node": true,
-    "es6": true
+  env: {
+    node: true
+  },
+  'extends': [
+    'plugin:vue/essential',
+    '@vue/standard'
+  ],
+  rules: {
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   },
   parserOptions: {
-    sourceType: "module",
-    parser: "babel-eslint"
-  },
-  // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
-  extends: [
-    "standard",
-    "plugin:vue/recommended"
-  ],
-  // required to lint *.vue files
-  plugins: ["html", "vue"]
-};
+    parser: 'babel-eslint'
+  }
+}

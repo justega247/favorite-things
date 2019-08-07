@@ -17,6 +17,7 @@ django-simple-history = "*"
 django-cors-headers = "*"
 cryptography = "*"
 gunicorn = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.7"
