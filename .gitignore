@@ -3,6 +3,9 @@
 .coverage
 cover/
 __pycache__/
-client/node_modules/
-.vscode/
 .pyc
+
+client/node_modules/
+client/dist
+client/npm-debug.log*
+.vscode/

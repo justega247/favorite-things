@@ -144,7 +144,7 @@ import Vue from 'vue'
 import VueToast from 'vue-toast-notification'
 import 'vue-toast-notification/dist/index.css'
 import { mapState } from 'vuex'
-import Header from './Header.vue'
+import Header from '../components/Header.vue'
 import Errors from '../helpers/errors'
 
 Vue.use(VueToast)
