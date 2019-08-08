@@ -6,6 +6,7 @@ key = 'TluxwB3fV_GWuLkR1_BzGs1Zk90TYAuhNMZP_0q4WyM='
 message = b'gAAAAABdMZu5PyhLOmt4yLlNZTWtxrAu-F5sXgsTERDelHHcMwLKvw-\
 FMDp88p4Lfn8YnXxkpWTnEozJl7Bi3o0xvqTQ1eorAxBj6iUINLm3jMCrv_KuJKGMzPIhOljXtK8KcCprXStzsqynAUFoIfoaQrNrwLZIxCRkLTrD8HdVU17jQo3dMC4='
 
+
 def main():
     f = Fernet(key)
     print(f.decrypt(message))
@@ -13,4 +14,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
