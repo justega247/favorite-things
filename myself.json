@@ -1,0 +1,30 @@
+{
+  "Name": "Okeremeta Jude Tega",
+  "Nationality": "Nigerian",
+  "Stacks": [
+    "Python",
+    "Javascript"
+  ],
+  "Technologies": [
+    "Postgres",
+    "Mongodb",
+    "Firebase",
+    "Express",
+    "NodeJs",
+    "Django",
+    "Flask",
+    "Vue",
+    "React"
+  ],
+  "Experience": {
+    "Javascript": "2 years",
+    "Python": "1 year"
+  },
+  "Projects": {
+    "Activo": {
+      "Description": "An Asset management tool",
+      "Team size": "12 - 20 devs",
+      "Position": "Backend developer"
+    }
+  }
+}
