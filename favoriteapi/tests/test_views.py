@@ -253,23 +253,6 @@ class FavoriteAPITest(BaseViewTest):
 
     def test_update_favorite_thing_ranking_to_value_larger_than_the_max_fails(self):
         favorite = self.create_favorite(metadata={"size": "medium"})
-        # url = reverse(
-        #     "create-favorite",
-        #     kwargs={
-        #         "version": "v1"
-        #     }
-        # )
-        # data = {
-        #     "title": "xiaoming",
-        #     "description": "This is the first of its kind",
-        #     "ranking": 1,
-        #     "category": 1,
-        # }
-        # response = self.client.post(
-        #     url,
-        #     data=json.dumps(data),
-        #     content_type="application/json"
-        # )
         favorite_id = favorite.id
         current_ranking = favorite.ranking
 
