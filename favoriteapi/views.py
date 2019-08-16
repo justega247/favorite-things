@@ -82,9 +82,7 @@ class FavoriteThingDetailView(mixins.DestroyModelMixin, generics.RetrieveAPIView
 
     def put(self, request, *args, **kwargs):
         favorite_thing_id = kwargs['id']
-        print(favorite_thing_id)
         new_ranking = request.data.get('ranking')
-        print(request.data)
         favorite_to_update = get_object_or_404(Favorite, id=favorite_thing_id)
         previous_ranking = favorite_to_update.ranking
 
